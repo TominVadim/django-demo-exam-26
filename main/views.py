@@ -298,25 +298,19 @@ def save_product_image(image_file):
     try:
         # Открываем изображение
         img = Image.open(image_file)
-        
         # Изменяем размер до 300x200 (сохраняя пропорции)
         img.thumbnail((300, 200), Image.Resampling.LANCZOS)
-        
         # Создаем уникальное имя файла
         import uuid
         ext = image_file.name.split('.')[-1].lower()
         filename = f"{uuid.uuid4().hex}.{ext}"
-        
         # Путь для сохранения
         relative_path = f"products/{filename}"
         full_path = os.path.join(settings.MEDIA_ROOT, relative_path)
-        
         # Создаем папку, если её нет
         os.makedirs(os.path.dirname(full_path), exist_ok=True)
-        
         # Сохраняем изображение
         img.save(full_path, quality=85, optimize=True)
-        
         return relative_path
     except Exception as e:
         print(f"Ошибка при сохранении изображения: {e}")
@@ -334,4 +328,3 @@ def delete_product_image(image_path):
                 os.remove(full_path)
     except Exception as e:
         print(f"Ошибка при удалении изображения: {e}")
-        
