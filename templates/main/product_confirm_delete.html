@@ -1,0 +1,116 @@
+<!-- templates/main/product_confirm_delete.html -->
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Удаление товара{% endblock %}
+
+{% block content %}
+<style>
+.delete-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.delete-title {
+    color: #ff4444;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.delete-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.product-info {
+    background-color: white;
+    padding: 20px;
+    border-radius: 6px;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+}
+
+.product-name {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.product-article {
+    color: #666;
+    font-size: 16px;
+}
+
+.warning {
+    color: #ff4444;
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #ffeeee;
+    border-radius: 4px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn-delete {
+    background-color: #ff4444;
+    color: white;
+    padding: 12px 40px;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.btn-cancel {
+    background-color: #666;
+    color: white;
+    padding: 12px 40px;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.btn-delete:hover, .btn-cancel:hover {
+    opacity: 0.8;
+}
+</style>
+
+<div class="delete-container">
+    <div class="delete-icon">⚠️</div>
+    <h1 class="delete-title">Подтверждение удаления</h1>
+    
+    <div class="product-info">
+        <div class="product-name">{{ product.name }}</div>
+        <div class="product-article">Артикул: {{ product.article }}</div>
+    </div>
+    
+    <div class="warning">
+        Вы уверены, что хотите удалить этот товар?<br>
+        Это действие невозможно отменить.
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button type="submit" class="btn-delete">🗑️ Удалить</button>
+            <a href="{% url 'product_list' %}" class="btn-cancel">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

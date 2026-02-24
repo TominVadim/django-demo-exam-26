@@ -1,0 +1,435 @@
+<!-- templates/main/product_form.html -->
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}{% if action == 'add' %}Добавление товара{% else %}Редактирование товара{% endif %}{% endblock %}
+
+{% block content %}
+<style>
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 28px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    font-size: 16px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: 'Times New Roman', serif;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #00FA9A;
+    box-shadow: 0 0 8px rgba(0,250,154,0.3);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+select.form-control {
+    cursor: pointer;
+    background-color: white;
+}
+
+.errorlist {
+    list-style: none;
+    padding: 10px;
+    margin: 5px 0 0 0;
+    color: #ff4444;
+    font-size: 14px;
+    background-color: #ffeeee;
+    border-radius: 4px;
+}
+
+.current-image {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: white;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.current-image img {
+    max-width: 300px;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.current-image p {
+    margin-top: 10px;
+    color: #666;
+}
+
+.image-preview {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: white;
+    border-radius: 6px;
+    border: 2px dashed #00FA9A;
+    text-align: center;
+    display: none;
+}
+
+.image-preview img {
+    max-width: 300px;
+    max-height: 200px;
+    object-fit: contain;
+}
+
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-save {
+    background-color: #00FA9A;
+    color: black;
+    padding: 12px 40px;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.btn-cancel {
+    background-color: #ff4444;
+    color: white;
+    padding: 12px 40px;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: opacity 0.3s;
+}
+
+.btn-save:hover, .btn-cancel:hover {
+    opacity: 0.8;
+}
+
+.id-field {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    color: #666;
+}
+
+.messages {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.required-field::after {
+    content: " *";
+    color: #ff4444;
+    font-weight: normal;
+}
+</style>
+
+<div class="form-container">
+    <h1 class="form-title">
+        {% if action == 'add' %}
+            ➕ Добавление нового товара
+        {% else %}
+            ✏️ Редактирование товара "{{ product.name }}"
+        {% endif %}
+    </h1>
+
+    <!-- Отображение сообщений -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" id="productForm">
+        {% csrf_token %}
+        
+        {% if product and action == 'edit' %}
+        <div class="form-group">
+            <label>ID товара:</label>
+            <input type="text" value="{{ product.id }}" class="form-control id-field" readonly disabled>
+        </div>
+        {% endif %}
+
+        <!-- Отображение ошибок формы -->
+        {% if form.errors %}
+            <div class="alert alert-error">
+                Пожалуйста, исправьте ошибки ниже:
+            </div>
+        {% endif %}
+
+        <!-- Артикул -->
+        <div class="form-group">
+            <label for="{{ form.article.id_for_label }}" class="required-field">Артикул</label>
+            {{ form.article }}
+            {% if form.article.errors %}
+                <ul class="errorlist">
+                    {% for error in form.article.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Наименование -->
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}" class="required-field">Наименование</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <ul class="errorlist">
+                    {% for error in form.name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Категория -->
+        <div class="form-group">
+            <label for="{{ form.category.id_for_label }}" class="required-field">Категория</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+                <ul class="errorlist">
+                    {% for error in form.category.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Производитель -->
+        <div class="form-group">
+            <label for="{{ form.producer.id_for_label }}" class="required-field">Производитель</label>
+            {{ form.producer }}
+            {% if form.producer.errors %}
+                <ul class="errorlist">
+                    {% for error in form.producer.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Поставщик -->
+        <div class="form-group">
+            <label for="{{ form.provider.id_for_label }}" class="required-field">Поставщик</label>
+            {{ form.provider }}
+            {% if form.provider.errors %}
+                <ul class="errorlist">
+                    {% for error in form.provider.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Единица измерения -->
+        <div class="form-group">
+            <label for="{{ form.unit.id_for_label }}" class="required-field">Единица измерения</label>
+            {{ form.unit }}
+            {% if form.unit.errors %}
+                <ul class="errorlist">
+                    {% for error in form.unit.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Цена -->
+        <div class="form-group">
+            <label for="{{ form.price.id_for_label }}" class="required-field">Цена (₽)</label>
+            {{ form.price }}
+            {% if form.price.errors %}
+                <ul class="errorlist">
+                    {% for error in form.price.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Скидка -->
+        <div class="form-group">
+            <label for="{{ form.discount.id_for_label }}">Скидка (%)</label>
+            {{ form.discount }}
+            {% if form.discount.errors %}
+                <ul class="errorlist">
+                    {% for error in form.discount.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Количество -->
+        <div class="form-group">
+            <label for="{{ form.amount.id_for_label }}" class="required-field">Количество на складе</label>
+            {{ form.amount }}
+            {% if form.amount.errors %}
+                <ul class="errorlist">
+                    {% for error in form.amount.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Описание -->
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Описание</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <ul class="errorlist">
+                    {% for error in form.description.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Текущее фото (при редактировании) -->
+        {% if product and product.photo and action == 'edit' %}
+        <div class="current-image">
+            <p>Текущее фото:</p>
+            <img src="{% static 'main/' %}{{ product.photo }}" alt="Текущее фото" 
+                 data-fallback="{% static 'main/products/picture.png' %}">
+        </div>
+        {% endif %}
+
+        <!-- Загрузка фото -->
+        <div class="form-group">
+            <label for="{{ form.photo.id_for_label }}">Фото товара</label>
+            {{ form.photo }}
+            <small style="color: #666; display: block; margin-top: 5px;">
+                Рекомендуемый размер: 300x200 пикселей. Максимальный размер файла: 5MB.
+            </small>
+            {% if form.photo.errors %}
+                <ul class="errorlist">
+                    {% for error in form.photo.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Предпросмотр фото -->
+        <div class="image-preview" id="imagePreview">
+            <p>Предпросмотр:</p>
+            <img id="previewImg" src="#" alt="Предпросмотр">
+        </div>
+
+        <!-- Кнопки действий -->
+        <div class="form-actions">
+            <button type="submit" class="btn-save">
+                {% if action == 'add' %}➕ Добавить товар{% else %}💾 Сохранить изменения{% endif %}
+            </button>
+            <a href="{% url 'product_list' %}" class="btn-cancel">Отмена</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Предпросмотр изображения
+    const photoInput = document.getElementById('{{ form.photo.id_for_label }}');
+    const preview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    
+    if (photoInput) {
+        photoInput.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                
+                reader.readAsDataURL(e.target.files[0]);
+            } else {
+                preview.style.display = 'none';
+                previewImg.src = '#';
+            }
+        });
+    }
+    
+    // Подтверждение отмены
+    const cancelBtn = document.querySelector('.btn-cancel');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function(e) {
+            if (!confirm('Все несохраненные изменения будут потеряны. Продолжить?')) {
+                e.preventDefault();
+            }
+        });
+    }
+    
+    // Обработка битых ссылок на изображения
+    const images = document.querySelectorAll('.current-image img');
+    images.forEach(img => {
+        img.onerror = function() {
+            this.onerror = null;
+            this.src = this.getAttribute('data-fallback');
+        };
+    });
+});
+</script>
+{% endblock %}

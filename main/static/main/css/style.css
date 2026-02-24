@@ -1,0 +1,197 @@
+/* main/static/main/css/style.css */
+
+body {
+    font-family: 'Times New Roman', serif;
+    background-color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #7FFF00;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.logo {
+    height: 50px;
+    width: auto;
+}
+
+.user-info {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.content {
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.button {
+    background-color: #00FA9A;
+    border: none;
+    padding: 12px 25px;
+    text-decoration: none;
+    color: black;
+    border-radius: 5px;
+    display: inline-block;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button:hover {
+    opacity: 0.8;
+}
+
+.error {
+    color: #ff4444;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.logout-btn {
+    background-color: #f44336;
+    color: white;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 3px;
+    margin-left: 20px;
+    font-size: 14px;
+}
+
+/* Стили для формы входа */
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+/* Стили для списка товаров */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.product-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.product-card.highlight-discount {
+    background-color: #2E8B57 !important;
+    color: white;
+}
+
+.product-card.out-of-stock {
+    background-color: #ADD8E6;
+}
+
+.product-image {
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.product-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.product-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+}
+
+.product-info p {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.product-price {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #ff4444;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.new-price {
+    color: #000000;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.price {
+    color: #000000;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.page-title {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.guest-badge {
+    background-color: #ff9800;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-left: 10px;
+}

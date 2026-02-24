@@ -1,0 +1,31 @@
+<!-- templates/main/base.html -->
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Магазин обуви{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'main/images/Icon.ico' %}">
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+</head>
+<body>
+    <div class="header">
+        <div>
+            <img src="{% static 'main/images/Icon.png' %}" alt="Логотип компании" class="logo">
+        </div>
+        <div>
+            {% if current_user %}
+                <span class="user-info">{{ current_user.get_full_name }}</span>
+                <a href="{% url 'logout' %}" class="logout-btn">Выйти</a>
+            {% elif is_guest %}
+                <span class="user-info">Гость <span class="guest-badge">гостевой режим</span></span>
+                <a href="{% url 'logout' %}" class="logout-btn">Выйти</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
